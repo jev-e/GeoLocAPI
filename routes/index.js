@@ -4,7 +4,15 @@ var router = express.Router();
 var auth = require('../misc/auth');
 const { MongoClient } = require('mongodb');
 cors = require('cors');
-const mongouri = "mongodb+srv://" + process.env.MONGOUSER + ":" + process.env.MONGOPASS + "@ase-cluster.vwedl.mongodb.net/GeoLoc?retryWrites=true&w=majority";
+const mongouri = "mongodb+srv://"
+  + process.env.MONGOUSER +
+  ":"
+  + process.env.MONGOPASS +
+  "@"
+  + process.env.MONGOCLUSTER +
+  ".vwedl.mongodb.net/"
+  + process.env.MONGODB +
+  "?retryWrites=true&w=majority";
 const mongoclient = new MongoClient(mongouri);
 
 
@@ -22,11 +30,16 @@ router.use(function (req, res, next) {
 
 router.post('/api/upload/', function (req, res) {
   mongoclient.connect();
-  const insert = mongoclient.db("GeoLoc").collection("Coordinates").insertOne(req.body);
+  doc = {
+    uid: req.body.uid,
+    longitude: req.body.longitude,
+    latitude: req.body.latitude
+  }
+  const insert = mongoclient.db("GeoLoc").collection("Coordinates").insertOne(doc);
   console.log(`New listing created with the following id: ${insert.insertedId}`);
 
   console.log(req.body);
-  res.send(req.body);
+  res.status(200).send({ message: "Document Inserted" });
 
 })
 
