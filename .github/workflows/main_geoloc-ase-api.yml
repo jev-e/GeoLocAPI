@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'GeoLoc-ASE-API'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3B4C60711FFF4235820774CCD235BB75 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CAEAEFF795904D1E92D056069C19A9E1 }}
           package: .
