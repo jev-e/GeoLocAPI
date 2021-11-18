@@ -21,7 +21,6 @@ router.post('/login', function (req, res) {
       } else {
         bcrypt.compare(req.body.password, user.password, (err, results) => {
           if (results) {
-            console.log(user)
             res.status(200).send("User Authenticated");
             
           } else {
