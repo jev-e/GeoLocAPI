@@ -47,7 +47,7 @@ router.post('/create', function (req, res) {
       }).then((user) => {
         if (user) {
           // account already exists with that user email! Return an error response
-          res.status(400).status("Account already exists with that email.");
+          res.status(409).status("Account already exists with that email.");
         } else {
           // otherwise, create a new user account
           poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
