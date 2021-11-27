@@ -58,9 +58,10 @@ router.post('/create', function (req, res) {
               if (err) {
                 res.status(400).send("Error during user creation.");
               } else {
-                res.status(201).send({ firstName: userProfile.firstName,
-                  userEmail: userProfile.userEmail,
-                  creationDate: userProfile.creationDate})
+                res.status(201).send("Accounted created successfully!")
+                // res.status(201).send({ firstName: userProfile.firstName,
+                //   userEmail: userProfile.userEmail,
+                //   creationDate: userProfile.creationDate})
               }
             }) // end insertOne()
         } // end else statement
