@@ -15,13 +15,17 @@ router.post('/login', function (req, res) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
     .findOne({
       "userEmail": req.body.userEmail
-    }).then((user) => {
-      if (!user) {
+    }).then((userProfile) => {
+      if (!userProfile) {
         res.status(404).status("No User Found");
       } else {
-        bcrypt.compare(req.body.password, user.password, (err, results) => {
+        bcrypt.compare(req.body.password, userProfile.password, (err, results) => {
           if (results) {
-            res.status(200).send("User Authenticated");
+            // send some info back to the app
+            res.status(200).send({ firstName: userProfile.firstName,
+              lastName: userProfile.lastName,
+              userEmail: userProfile.userEmail,
+              creationDate: userProfile.creationDate});
           } else {
             res.status(401).send("Password Incorrect");
           }
@@ -55,7 +59,9 @@ router.post('/create', function (req, res) {
               if (err) {
                 res.status(400).send("Error during user creation");
               } else {
-                res.status(201).send("Created user with email " + userProfile.userEmail)
+                res.status(201).send({ firstName: userProfile.firstName,
+                  userEmail: userProfile.userEmail,
+                  creationDate: userProfile.creationDate})
               }
             }) // end insertOne()
         } // end else statement
