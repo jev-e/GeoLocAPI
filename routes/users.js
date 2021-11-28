@@ -10,6 +10,10 @@ router.get('/', function (req, res, next) {
   res.send('User Page');
 });
 
+const mockToken =
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikx1Y2FzIEdhcmNleiIsImlhdCI6MTUxNjIzOTAyMn0.oK5FZPULfF-nfZmiumDGiufxf10Fe2KiGe9G5Njoa64';
+
+
 
 router.post('/verify', function (req, res) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
@@ -58,10 +62,11 @@ router.post('/create', function (req, res) {
               if (err) {
                 res.status(400).send("Error during user creation.");
               } else {
-                res.status(201).send("Accounted created successfully!");
-                // res.status(201).send({ firstName: userProfile.firstName,
-                //   userEmail: userProfile.userEmail,
-                //   creationDate: userProfile.creationDate})
+                // res.status(201).send("Accounted created successfully!");
+                res.status(201).send({ firstName: userProfile.firstName,
+                  lastName: userProfile.lastName,
+                  email: userProfile.userEmail,
+                  token: mockToken});
               }
             }) // end insertOne()
         } // end else statement
