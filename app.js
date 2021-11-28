@@ -9,6 +9,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api');
 
+const port = process.env.PORT;
+
 require('dotenv').config()
 
 var app = express();
@@ -27,6 +29,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRouter)
 
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`)
+})
 
 //Connect to Mongo Cluster
 poolConnection.dbCon();
