@@ -26,7 +26,8 @@ router.post('/verify', function (req, res, next) {
             // send some info back to the app
             res.status(200).send({ firstName: userProfile.firstName,
               lastName: userProfile.lastName,
-              userEmail: userProfile.userEmail});
+              userEmail: userProfile.userEmail,
+              token: mockToken});
           } else {
             res.status(401).send("Password Incorrect");
           }
@@ -61,9 +62,9 @@ router.post('/create', function (req, res, next) {
                 res.status(400).send("Error during user creation.");
               } else {
                 // res.status(201).send("Accounted created successfully!");
-                res.status(201).json({ firstName: userProfile.firstName,
+                res.status(201).send({ firstName: userProfile.firstName,
                   lastName: userProfile.lastName,
-                  email: userProfile.userEmail,
+                  userEmail: userProfile.userEmail,
                   token: mockToken});
               }
             }) // end insertOne()
