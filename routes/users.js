@@ -13,8 +13,7 @@ router.get('/', function (req, res, next) {
 const mockToken =
 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikx1Y2FzIEdhcmNleiIsImlhdCI6MTUxNjIzOTAyMn0.oK5FZPULfF-nfZmiumDGiufxf10Fe2KiGe9G5Njoa64';
 
-
-router.post('/verify', function (req, res) {
+router.post('/verify', function (req, res, next) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
     .findOne({
       "userEmail": req.body.userEmail
