@@ -14,7 +14,6 @@ const mockToken =
 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikx1Y2FzIEdhcmNleiIsImlhdCI6MTUxNjIzOTAyMn0.oK5FZPULfF-nfZmiumDGiufxf10Fe2KiGe9G5Njoa64';
 
 
-
 router.post('/verify', function (req, res) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
     .findOne({
@@ -37,7 +36,7 @@ router.post('/verify', function (req, res) {
     })
 });
 
-router.post('/create', function (req, res) {
+router.post('/create', function (req, res, next) {
   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
     const userProfile = {
       firstName: req.body.firstName,
@@ -58,7 +57,7 @@ router.post('/create', function (req, res) {
         } else {
           // otherwise, create a new user account
           poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
-            .insertOne(userProfile, (err, res) => {
+            .insertOne(userProfile, (err, result) => {
               if (err) {
                 res.status(400).send("Error during user creation.");
               } else {
