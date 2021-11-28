@@ -63,7 +63,7 @@ router.post('/create', function (req, res) {
                 res.status(400).send("Error during user creation.");
               } else {
                 // res.status(201).send("Accounted created successfully!");
-                res.status(201).send({ firstName: userProfile.firstName,
+                res.status(201).json({ firstName: userProfile.firstName,
                   lastName: userProfile.lastName,
                   email: userProfile.userEmail,
                   token: mockToken});
