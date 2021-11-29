@@ -17,20 +17,18 @@ router.post('/verify', function (req, res, next) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
     .findOne({
       "userEmail": req.body.userEmail
-    }).then((userProfile) => {
-      if (userProfile) {
-        bcrypt.compare(req.body.password, userProfile.password, (err, results) => {
-          if (results) {
-            // send some info back to the app
-            res.status(200).send({ firstName: userProfile.firstName,
-              lastName: userProfile.lastName,
-              userEmail: userProfile.userEmail,
-              token: mockToken});
-          } else {
-            res.status(401).send("Password Incorrect");
-          }
-        })
-      }
+    }).then((user) => {
+      bcrypt.compare(req.body.password, user.password, (err, results) => {
+        if (results) {
+          // send some info back to the app
+          res.status(200).send({ firstName: user.firstName,
+            lastName: user.lastName,
+            userEmail: user.userEmail,
+            token: mockToken});
+        } else {
+          res.status(401).send("Password Incorrect");
+        }
+      })
     })
     .catch(err => {
       res.status(404).send("No User Found");
