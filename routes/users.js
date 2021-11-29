@@ -30,8 +30,6 @@ router.post('/verify', function (req, res, next) {
             res.status(401).send("Password Incorrect");
           }
         })
-      } else {
-        res.status(400).send("Not sure why this would happen.");
       }
     })
     .catch(err => {
