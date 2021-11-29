@@ -19,7 +19,7 @@ router.post('/verify', function (req, res, next) {
       "userEmail": req.body.userEmail
     }).then((userProfile) => {
       if (!userProfile) {
-        res.status(404).status("No User Found");
+        res.status(404).send("No User Found");
       } else {
         bcrypt.compare(req.body.password, userProfile.password, (err, results) => {
           if (results) {
