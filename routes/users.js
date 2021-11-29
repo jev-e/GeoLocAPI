@@ -17,10 +17,8 @@ router.post('/verify', function (req, res, next) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
     .findOne({
       "userEmail": req.body.userEmail
-    }).then((userProfile) => {
-      if (!userProfile) {
-        res.status(404).send("No User Found");
-      } else {
+    }).then((user) => {
+      if (user) {
         bcrypt.compare(req.body.password, userProfile.password, (err, results) => {
           if (results) {
             // send some info back to the app
@@ -33,6 +31,9 @@ router.post('/verify', function (req, res, next) {
           }
         })
       }
+    })
+    .catch(err => {
+      res.status(404).send("No User Found");
     })
 });
 
