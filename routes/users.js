@@ -17,8 +17,8 @@ router.post('/verify', function (req, res, next) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
     .findOne({
       "userEmail": req.body.userEmail
-    }).then((user) => {
-      if (user) {
+    }).then((userProfile) => {
+      if (userProfile) {
         bcrypt.compare(req.body.password, userProfile.password, (err, results) => {
           if (results) {
             // send some info back to the app
