@@ -18,21 +18,26 @@ router.post('/verify', function (req, res, next) {
     .findOne({
       "userEmail": req.body.userEmail
     }).then((user) => {
-      bcrypt.compare(req.body.password, user.password, (err, results) => {
-        if (results) {
-          // send some info back to the app
-          res.status(200).send({ firstName: user.firstName,
-            lastName: user.lastName,
-            userEmail: user.userEmail,
-            token: mockToken});
-        } else {
-          res.status(401).send("Password Incorrect");
-        }
-      })
+
+      if (!user) {
+        res.status(404).send("No User Found");
+      } else {
+        bcrypt.compare(req.body.password, user.password, (err, results) => {
+          if (results) {
+            // send some info back to the app
+            res.status(200).send({ firstName: user.firstName,
+              lastName: user.lastName,
+              userEmail: user.userEmail,
+              token: mockToken});
+          } else {
+            res.status(401).send("Password Incorrect");
+          }
+        })
+      }
     })
-    .catch(err => {
-      res.status(404).send("No User Found");
-    })
+    // .catch(err => {
+    //   res.status(404).send("No User Found");
+    // })
 });
 
 router.post('/create', function (req, res, next) {
