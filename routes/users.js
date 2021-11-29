@@ -35,7 +35,8 @@ router.post('/verify', function (req, res, next) {
       }
     })
     .catch(err => {
-      res.status(400).send("Not sure why this would happen.");
+      res.status(404).send("No User Found");
+      // res.status(400).send("Not sure why this would happen.");
     })
 });
 
