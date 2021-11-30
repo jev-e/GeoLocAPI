@@ -28,17 +28,15 @@ router.post('/verify', function (req, res, next) {
               userEmail: user.userEmail,
               token: mockToken});
           } else {
-            res.status(401).send("Password Incorrect");
+            res.status(401).send("Password incorrect");
           }
         })
       } else {
-        console.log("You are in the then block.")
-        res.status(404).send("You are in the then block.");
+        res.status(404).send("No user found!");
       }
     })
     .catch(err => {
-      console.log("Error is caught, sending status 404.")
-      res.status(404).send("You are in the catch block.");
+      res.status(500).send("Server side error.");
       // res.status(400).send("Not sure why this would happen.");
     })
 });
