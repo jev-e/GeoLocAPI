@@ -32,13 +32,13 @@ router.post('/verify', function (req, res, next) {
           }
         })
       } else {
-        console.log("Error is NOT caught, sending status 404.")
+        console.log("You are in the then block.")
         res.status(404).send("No User Found");
       }
     })
     .catch(err => {
       console.log("Error is caught, sending status 404.")
-      res.status(404).send("No User Found");
+      res.status(404).send("You are in the catch block.");
       // res.status(400).send("Not sure why this would happen.");
     })
 });
