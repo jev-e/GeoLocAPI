@@ -2,7 +2,7 @@ require('dotenv').config()
 var express = require('express');
 var router = express.Router();
 var poolConnection = require('../PoolConnection');
-import axios, {AxiosError} from 'axios';
+var axios = require('axios');
 
 // webserver URL for geocoding
 export const postcodesServerURL = "https://api.postcodes.io"
