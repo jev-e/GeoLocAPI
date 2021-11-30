@@ -18,6 +18,7 @@ router.post('/verify', function (req, res, next) {
     .findOne({
       "userEmail": req.body.userEmail
     }).then((user) => {
+      console.log("Checking for user");
       if (user) {
         bcrypt.compare(req.body.password, user.password, (err, results) => {
           if (results) {
@@ -31,10 +32,12 @@ router.post('/verify', function (req, res, next) {
           }
         })
       } else {
+        console.log("Error is NOT caught, sending status 404.")
         res.status(404).send("No User Found");
       }
     })
     .catch(err => {
+      console.log("Error is caught, sending status 404.")
       res.status(404).send("No User Found");
       // res.status(400).send("Not sure why this would happen.");
     })
