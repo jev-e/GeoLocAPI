@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
 router.get('/getNearestPostcodes', function (req, res, next) {
 
     // get a list of the nearest postcodes (API request to postcodes.io)
-    getNearestPostcodes(req.params.lat, req.params.long)
+    getNearestPostcodes(req.query.lat, req.query.long)
         .then((postcodesResponse) => {
 
             // send the postcodes back to the app as a JSON object
@@ -22,32 +22,30 @@ router.get('/getNearestPostcodes', function (req, res, next) {
 
         })
         .catch(err => {
-            res.status(400).send("Error!");
+            res.status(400).send(err);
         })
 });
 
 const getNearestPostcodes = async (lat, long) => {
 
+    console.log(lat);
+    console.log(long);
+
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(postcodesServerURL + "/postcodes", {
-            params: {
-                lat: lat,
-                lon: long,
-            }
-          }).then((response) => {
+        axios.get(postcodesServerURL + `/postcodes?lon=${long}&lat=${lat}`)
+        .then((response) => {
+              //console.log(response);
             // check response status
-            if (response.status == 200) {
+            if (response.status == 200 | response.status == 304) {
 
                 var nearestPostcodes = [];
 
-                for (var item in response.result) {
-
-                    if (item.hasOwnProperty(postcode)) {
-                        nearestPostcodes.push(item.postcode)
-                    }
+                for(var i = 0; i < response.data.result.length; i++) {
+                    var obj = response.data.result[i];
+                
+                    nearestPostcodes.push(obj.postcode);
                 }
-
                 resolve({
                     nearestPostcodes: nearestPostcodes,
                 });
@@ -56,6 +54,7 @@ const getNearestPostcodes = async (lat, long) => {
             }
         })
         .catch(err => {
+            //console.log(err);
             if (err.response) {
                 reject(new Error("Error " + err.response.status ));
             } else if (err.request) {
