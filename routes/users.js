@@ -33,7 +33,7 @@ router.post('/verify', function (req, res, next) {
         })
       } else {
         console.log("You are in the then block.")
-        res.status(404).send("No User Found");
+        res.status(404).send("You are in the then block.");
       }
     })
     .catch(err => {
