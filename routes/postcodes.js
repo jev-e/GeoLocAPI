@@ -5,7 +5,7 @@ var poolConnection = require('../PoolConnection');
 var axios = require('axios');
 
 // webserver URL for geocoding
-export const postcodesServerURL = "https://api.postcodes.io"
+const postcodesServerURL = "https://api.postcodes.io"
 
 router.post('/getNearestPostcodes', function (req, res, next) {
 
@@ -64,3 +64,5 @@ const getNearestPostcodes = async (lat, long) => {
         })
     })
 };
+
+module.exports = router;
