@@ -7,10 +7,10 @@ var axios = require('axios');
 // webserver URL for geocoding
 const postcodesServerURL = "https://api.postcodes.io"
 
-router.post('/getNearestPostcodes', function (req, res, next) {
+router.get('/getNearestPostcodes', function (req, res, next) {
 
     // get a list of the nearest postcodes (API request to postcodes.io)
-    getNearestPostcodes(req.body.lat, req.body.long)
+    getNearestPostcodes(req.params.lat, req.params.long)
         .then((postcodesResponse) => {
 
             // send the postcodes back to the app as a JSON object
