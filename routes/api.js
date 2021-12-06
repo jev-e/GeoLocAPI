@@ -4,6 +4,13 @@ var router = express.Router();
 var auth = require('../misc/auth');
 cors = require('cors');
 var poolConnection = require('../PoolConnection');
+var axios = require('axios');
+
+
+const postCodesIo = "https://postcodes.io"
+
+
+
 
 
 router.use(cors());
@@ -40,6 +47,50 @@ router.post('/upload', function (req, res) {
                 res.status(200).send("Coordinates Uploaded");
             }
         });
+
+})
+
+router.get("/mapview/:postCode", function (req, res) {
+    var db = poolConnection.getDb();
+    var toSend = [];
+
+    userPostCode = req.params.postCode;
+    areaCode = userPostCode.replace(/[0-9].*/, '').toUpperCase();
+
+    axios.get(postCodesIo + "/postcodes/" + userPostCode + "/nearest")
+        .then(axiosRes => {
+            let postCodesArr = axiosRes.data.result.map(code => code.postcode)
+            let toFind = {
+                'areaCode': {
+                    $in: postCodesArr
+
+                }
+            }
+            db.collection(areaCode)
+                .find(toFind).toArray()
+                .then(docs => {
+                    toSend = docs.map(index => ({
+                        "areaCode": index.areaCode,
+                        "average": index.average,
+                        "longitude": index.longitude,
+                        "latitude": index.latitude,
+                        "data": index.data
+                    }))
+                    console.log(toSend)
+                    res.status(200).send(toSend);
+                }
+
+                )
+                .catch(err => {
+                    res.status(500).send(err)
+
+                })
+
+        }
+        )
+        .catch(err => {
+            res.status(404).send("No Postcodes Found")
+        })
 
 })
 

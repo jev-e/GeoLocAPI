@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
 });
 
 const mockToken =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikx1Y2FzIEdhcmNleiIsImlhdCI6MTUxNjIzOTAyMn0.oK5FZPULfF-nfZmiumDGiufxf10Fe2KiGe9G5Njoa64';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikx1Y2FzIEdhcmNleiIsImlhdCI6MTUxNjIzOTAyMn0.oK5FZPULfF-nfZmiumDGiufxf10Fe2KiGe9G5Njoa64';
 
 router.post('/verify', function (req, res, next) {
   poolConnection.getDb().collection(process.env.MONGOUSERCOLLECTION)
@@ -23,10 +23,12 @@ router.post('/verify', function (req, res, next) {
         bcrypt.compare(req.body.password, user.password, (err, results) => {
           if (results) {
             // send some info back to the app
-            res.status(200).send({ firstName: user.firstName,
+            res.status(200).send({
+              firstName: user.firstName,
               lastName: user.lastName,
               userEmail: user.userEmail,
-              token: mockToken});
+              token: mockToken
+            });
           } else {
             res.status(401).send("Password incorrect");
           }
@@ -67,16 +69,36 @@ router.post('/create', function (req, res, next) {
                 res.status(400).send("Error during user creation.");
               } else {
                 // res.status(201).send("Accounted created successfully!");
-                res.status(201).send({ firstName: userProfile.firstName,
+                res.status(201).send({
+                  firstName: userProfile.firstName,
                   lastName: userProfile.lastName,
                   userEmail: userProfile.userEmail,
-                  token: mockToken});
+                  token: mockToken
+                });
               }
             }) // end insertOne()
         } // end else statement
       }) // end then
   }) // end hash()
 }); // end router.post()
+
+router.delete("/:account", function (req, res) {
+  var db = poolConnection.getDb();
+  toDelete = { "userEmail": req.params.account };
+  db.collection(process.env.MONGOUSERCOLLECTION)
+    .deleteOne(toDelete, (obj, err) => {
+      if (err.deletedCount == 0) {
+        res.status(404).send("No Users Found")
+      } else {
+        console.log("User " + toDelete.userEmail + " deleted.")
+        res.status(200).send("User Account Deleted");
+      }
+    })
+
+})
+
+
+
 
 
 module.exports = router;
