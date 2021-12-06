@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
 router.get('/getNearestPostcodes', function (req, res, next) {
 
     // get a list of the nearest postcodes (API request to postcodes.io)
-    getNearestPostcodes(req.query.lat, req.query.long)
+    getNearestPostcodes(req.query.lat, req.query.long, req.query.limit)
         .then((postcodesResponse) => {
 
             // send the postcodes back to the app as a JSON object
@@ -26,14 +26,11 @@ router.get('/getNearestPostcodes', function (req, res, next) {
         })
 });
 
-const getNearestPostcodes = async (lat, long) => {
-
-    console.log(lat);
-    console.log(long);
+const getNearestPostcodes = async (lat, long, limit) => {
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(postcodesServerURL + `/postcodes?lon=${long}&lat=${lat}`)
+        axios.get(postcodesServerURL + `/postcodes?lon=${long}&lat=${lat}&limit=${limit}`)
         .then((response) => {
               //console.log(response);
             // check response status
