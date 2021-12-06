@@ -13,6 +13,8 @@ router.get('/', function (req, res, next) {
 
 router.get('/getNearestPostcodes', function (req, res, next) {
 
+    // console.log(req.query)
+
     // get a list of the nearest postcodes (API request to postcodes.io)
     getNearestPostcodes(req.query.lat, req.query.long, req.query.limit)
         .then((postcodesResponse) => {
@@ -32,7 +34,6 @@ const getNearestPostcodes = async (lat, long, limit) => {
     return new Promise((resolve, reject) => {
         axios.get(postcodesServerURL + `/postcodes?lon=${long}&lat=${lat}&limit=${limit}`)
         .then((response) => {
-              //console.log(response);
             // check response status
             if (response.status == 200 | response.status == 304) {
 
@@ -51,7 +52,7 @@ const getNearestPostcodes = async (lat, long, limit) => {
             }
         })
         .catch(err => {
-            //console.log(err);
+            console.log(err);
             if (err.response) {
                 reject(new Error("Error " + err.response.status ));
             } else if (err.request) {
