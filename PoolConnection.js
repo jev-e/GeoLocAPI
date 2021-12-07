@@ -6,7 +6,7 @@ const mongoUri = "mongodb+srv://"
     ":"
     + process.env.MONGOPASS +
     "@"
-    + process.env.MONGOCLUSTER +
+    + process.env.ASECLUSTER +
     ".vwedl.mongodb.net/"
     + process.env.MONGODB +
     "?retryWrites=true&w=majority";

@@ -8,6 +8,7 @@ var poolConnection = require('./PoolConnection')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api');
+var postcodesRouter = require('./routes/postcodes');
 
 require('dotenv').config()
 
@@ -26,12 +27,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRouter)
-
+app.use('/postcodes', postcodesRouter)
 
 //Connect to Mongo Cluster
 poolConnection.dbCon();
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
