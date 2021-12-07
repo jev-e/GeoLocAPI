@@ -94,5 +94,49 @@ router.get("/mapview/:postCode", function (req, res) {
 
 })
 
+router.get("/mapview/outcode/:outCode", function (req, res) {
+    var db = poolConnection.getDb();
+    userOutcode = req.params.outCode;
+    areaCode = userOutcode.replace(/[0-9].*/, '').toUpperCase();
+
+
+    axios.get(postCodesIo + "/outcodes/" + userOutcode + "/nearest")
+        .then(axiosRes => {
+            let outCodesArr = axiosRes.data.result.map(code => code.outcode)
+            let toFind = {
+                'areaCode': {
+                    $in: outCodesArr
+
+                }
+            }
+            db.collection(areaCode)
+                .find(toFind).toArray()
+                .then(docs => {
+                    toSend = docs.map(index => ({
+                        "areaCode": index.areaCode,
+                        "average": index.average,
+                        "longitude": index.longitude,
+                        "latitude": index.latitude
+                    }))
+                    console.log(toSend)
+                    res.status(200).send(toSend);
+                }
+
+                )
+                .catch(err => {
+                    res.status(500).send(err)
+
+                })
+
+        }
+        )
+        .catch(err => {
+            res.status(404).send("No Postcodes Found")
+        })
+        
+
+})
+
+
 
 module.exports = router;
