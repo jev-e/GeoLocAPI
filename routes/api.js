@@ -154,10 +154,82 @@ router.get("/mapview/outcode/:outCode", function (req, res) {
         .catch(err => {
             res.status(404).send("No Postcodes Found")
         })
-        
+
 
 })
 
+router.get("/mapview/unit/:postCode", function (req, res) {
+    var db = poolConnection.getDb();
+    userPostCode = req.params.postCode;
+    areaCode = userPostCode.replace(/[0-9].*/, '').toUpperCase();
+    toFind = {
+        "level": "unit"
+    }
 
+    db.collection(areaCode)
+        .find(toFind).toArray()
+        .then(docs => {
+            toSend = docs.map(index => ({
+                "areaCode": index.areaCode,
+                "average": index.average,
+                "longitude": index.longitude,
+                "latitude": index.latitude,
+            }))
+            console.log(toSend)
+            res.status(200).send(toSend);
+        }
+
+        )
+        .catch(err => {
+            res.status(500).send(err)
+
+        })
+
+
+
+        .catch(err => {
+            res.status(404).send("No Postcodes Found")
+        })
+
+})
+
+router.get("/mapview/unit/district/:postCode", function (req, res) {
+    var db = poolConnection.getDb();
+    userPostCode = req.params.postCode;
+    areaCode = userPostCode.replace(/[0-9].*/, '').toUpperCase();
+    let expression = "^" + userPostCode.replace(/[" "].*/, "").toUpperCase() + " ";
+    console.log(expression)
+    toFind = {
+        "areaCode": { $regex: expression, $options: "i" },
+        "level": "unit"
+    }
+
+    db.collection(areaCode)
+        .find(toFind).toArray()
+        .then(docs => {
+
+            toSend = docs.map(index => ({
+                "areaCode": index.areaCode,
+                "average": index.average,
+                "longitude": index.longitude,
+                "latitude": index.latitude,
+            }))
+            console.log(toSend)
+            res.status(200).send(toSend);
+        }
+
+        )
+        .catch(err => {
+            res.status(500).send(err)
+
+        })
+
+
+
+        .catch(err => {
+            res.status(404).send("No Postcodes Found")
+        })
+
+})
 
 module.exports = router;
