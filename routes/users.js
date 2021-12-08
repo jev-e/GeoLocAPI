@@ -110,9 +110,9 @@ router.get("/userLocations/:userEmail", function (req, res) {
 
         toSend = docs.map(index => ({
 
-          "longitude": index.longitude,
-          "latitude": index.latitude,
-          "creationDate": index.creationDate
+          longitude: index.longitude,
+          latitude: index.latitude,
+          creationDate: index.creationDate
         }))
         console.log(toSend)
         res.status(200).send(toSend);
