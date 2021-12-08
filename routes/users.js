@@ -97,6 +97,65 @@ router.delete("/:account", function (req, res) {
 
 })
 
+router.get("/userLocations/:userEmail", function (req, res) {
+  var db = poolConnection.getDb();
+  uid = req.params.userEmail;
+  let toFind = { userEmail: uid }
+  db.collection(process.env.USERLOCATIONCOLLECTION)
+    .find(toFind).toArray()
+    .then(docs => {
+      if (docs.length == 0) {
+        res.status(404).send("No Saved Locations for Given User")
+      } else {
+
+        toSend = docs.map(index => ({
+
+          "longitude": index.longitude,
+          "latitude": index.latitude,
+          "creationDate": index.creationDate
+        }))
+        console.log(toSend)
+        res.status(200).send(toSend);
+      }
+    }
+    )
+    .catch(err => {
+      res.status(500).send(err)
+
+    })
+
+})
+
+router.post("/password", function (req, res) {
+  var db = poolConnection.getDb();
+  let oldPassword = req.body.old;
+  let newPassword = req.body.new;
+  let userEmail = req.body.email;
+  let toFind = { "userEmail": userEmail }
+  db.collection(process.env.MONGOUSERCOLLECTION)
+    .findOne(toFind)
+    .then((user) => {
+      if (user) {
+        
+        bcrypt.compare(oldPassword, user.password, (err, results) => {
+          if (results) {
+            bcrypt.hash(newPassword, saltRounds, (err, hash) => {
+              db.collection(process.env.MONGOUSERCOLLECTION)
+                .updateOne(toFind, { $set: { "password": hash } }, (err, docs) => {
+                  res.status(200).send("Password Updated Successfully")
+                
+                })
+            })
+          }
+          else { res.status(401).send("Password incorrect"); }
+        })
+      } else { res.status(404).send("No User Found") }
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+})
+
 
 
 
