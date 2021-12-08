@@ -90,8 +90,13 @@ router.delete("/:account", function (req, res) {
       if (err.deletedCount == 0) {
         res.status(404).send("No Users Found")
       } else {
-        console.log("User " + toDelete.userEmail + " deleted.")
-        res.status(200).send("User Account Deleted");
+        db.collection(process.env.USERLOCATIONCOLLECTION)
+          .deleteOne(toDelete, (obj, err) => {
+            console.log("User " + toDelete.userEmail + " deleted.");
+            res.status(200).send("User Account Deleted");
+
+          })
+
       }
     })
 
@@ -136,14 +141,14 @@ router.post("/password", function (req, res) {
     .findOne(toFind)
     .then((user) => {
       if (user) {
-        
+
         bcrypt.compare(oldPassword, user.password, (err, results) => {
           if (results) {
             bcrypt.hash(newPassword, saltRounds, (err, hash) => {
               db.collection(process.env.MONGOUSERCOLLECTION)
                 .updateOne(toFind, { $set: { "password": hash } }, (err, docs) => {
                   res.status(200).send("Password Updated Successfully")
-                
+
                 })
             })
           }
