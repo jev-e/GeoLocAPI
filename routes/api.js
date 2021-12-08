@@ -29,6 +29,27 @@ router.get('/', function (req, res) {
     res.send("Api Page")
 })
 
+router.post('/saveLocation', function (req, res) {
+    var db = poolConnection.getDb();
+    doc = {
+        userEmail: req.body.userEmail,
+        longitude: req.body.longitude,
+        latitude: req.body.latitude,
+        creationDate: new Date()
+    }
+
+    db
+        .collection(process.env.USERLOCATIONCOLLECTION)
+        .insertOne(doc, (err, result) => {
+            if (err) {
+                res.status(400).send("Error Uploading Coordinates");
+            } else {
+                res.status(200).send("Coordinates Uploaded");
+            }
+        });
+
+})
+
 router.post('/upload', function (req, res) {
     var db = poolConnection.getDb();
     doc = {
