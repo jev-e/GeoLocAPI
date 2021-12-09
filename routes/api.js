@@ -78,7 +78,7 @@ router.get("/mapview/:postCode", function (req, res) {
     userPostCode = req.params.postCode;
     areaCode = userPostCode.replace(/[0-9].*/, '').toUpperCase();
 
-    axios.get(postCodesIo + "/postcodes/" + userPostCode + "/nearest")
+    axios.get(postCodesIo + "/postcodes/" + userPostCode + "/nearest?limit=20&radius=2000")
         .then(axiosRes => {
             let postCodesArr = axiosRes.data.result.map(code => code.postcode)
             let toFind = {
