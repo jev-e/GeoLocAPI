@@ -73,12 +73,15 @@ router.post('/upload', function (req, res) {
 
 router.get("/mapview/:postCode", function (req, res) {
     var db = poolConnection.getDb();
-    var toSend = [];
+
+    var limit = req.query.limit || 20;
+
+    var radius = req.query.radius || 2000; 
 
     userPostCode = req.params.postCode;
     areaCode = userPostCode.replace(/[0-9].*/, '').toUpperCase();
 
-    axios.get(postCodesIo + "/postcodes/" + userPostCode + "/nearest?limit=20&radius=2000")
+    axios.get(postCodesIo + "/postcodes/" + userPostCode + "/nearest?limit=" + limit + "&radius=" + radius)
         .then(axiosRes => {
             let postCodesArr = axiosRes.data.result.map(code => code.postcode)
             let toFind = {
@@ -97,7 +100,7 @@ router.get("/mapview/:postCode", function (req, res) {
                         "latitude": index.latitude,
                         "data": index.data
                     }))
-                    console.log(toSend)
+                    
                     res.status(200).send(toSend);
                 }
 
